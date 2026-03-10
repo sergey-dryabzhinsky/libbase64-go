@@ -48,7 +48,7 @@ ifeq (1,$(VERBOSE))
 XZ_VERBOSE=-v
 endif
 PREFIX?=/usr/local
-INCLUDES_DIR?=include/libmd5-go
+INCLUDES_DIR?=include/libbase64-go
 MULTIARCH?=$(shell uname -m)-linux-gnu
 LIBS_DIR?=lib/$(MULTIARCH)
 
