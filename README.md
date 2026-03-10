@@ -123,4 +123,4 @@ Not found library with only one functionality, so I tryed make it by myself.
 
   return: `void`
 
-  *since*: 0.0.3
+  *since*: 0.0.1
