@@ -13,8 +13,6 @@ import (
 const ERRNO_NO_ERROR = 0
 const ERRNO_GENERIC_ERROR = 1
 const ERRNO_DECODE_ERROR = 2
-const ERRNO_OS_FILE_NOT_EXISTS = 404
-const ERRNO_OS_FILE_NOT_READABLE = 403
 
 var VERSION string
 var lastErrorCode int = ERRNO_NO_ERROR
@@ -86,13 +84,13 @@ func libbase64_go__FreeResult(ptr *C.char) {
 	C.free(unsafe.Pointer(ptr))
 }
 
-//export libbase64_go__version
-func libbase64_go__version() *C.char {
+//export libbase64_go__Version
+func libbase64_go__Version() *C.char {
 	return C.CString(VERSION)
 }
 
-//export libbase64_go__version_go
-func libbase64_go__version_go() *C.char {
+//export libbase64_go__Version_go
+func libbase64_go__Version_go() *C.char {
 	return C.CString(runtime.Version())
 }
 

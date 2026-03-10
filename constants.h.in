@@ -5,7 +5,5 @@
 #define libbase64_go_ERRNO_NO_ERROR 0
 #define libbase64_go_ERRNO_GENERIC_ERROR 1
 #define libbase64_go_ERRNO_DECODE_ERROR 2
-#define libbase64_go_ERRNO_OS_FILE_NOT_EXISTS 404
-#define libmbase64_go_ERRNO_OS_FILE_NOT_READABLE 403
 
 #endif
