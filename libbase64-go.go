@@ -36,12 +36,6 @@ func libbase64_go_nts__getErrorDescription(errno C.int) *C.char {
 	if (errno == ERRNO_DECODE_ERROR){
 		result = C.CString("Some decoding error happend")
 	}
-	if (errno == ERRNO_OS_FILE_NOT_EXISTS){
-		result = C.CString("File by given path not exists! Or not readable!")
-	}
-	if (errno == ERRNO_OS_FILE_NOT_READABLE){
-		result = C.CString("File by given path maybe not readable!")
-	}
 	return result
 }
 
