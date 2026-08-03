@@ -1,4 +1,4 @@
-name: Build lib  on Ubuntu16 amd64 by golang-1.6
+name: Build lib on Ubuntu16 amd64 by golang-1.16
 
 on: [push, pull_request]
 
@@ -14,13 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Ubuntu 24+16 amd64 golang-bin-1.6
+          - name: Ubuntu 24+16 amd64 golang-bin-1.16
             runs-on: ubuntu-latest
             matrix: linux
             arch: amd64
             release: xenial
             mirror: http://azure.archive.ubuntu.com/ubuntu
-            gopkg: golang-bin-1.6-go
+            gopkg: golang-bin-1.16-go
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,19 +86,19 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            echo GO;
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.6 go-1.6 version"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.16 go-1.16 version"
            echo GO-ENV;
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.6 go-1.6 env"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.16 go-1.16 env"
 
       - name: Make lib
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.6 GO=go-1.6 make lib && ls libbase64-go* -lh"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.16 GO=go-1.16 make lib && ls libbase64-go* -lh"
 
       - name: Make tar
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.6 GO=go-1.6 make tar"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.16 GO=go-1.16 make tar"
 
       - name: Prepare tar for upload
         if: matrix.os.matrix == 'linux'

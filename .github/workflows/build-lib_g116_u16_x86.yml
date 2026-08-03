@@ -86,19 +86,19 @@ jobs:
         if: matrix.os.matrix == 'linux'
         run: |
            echo GO;
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.6 go-1.6 version"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.16 go-1.16 version"
            echo GO-ENV;
-           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.6 go-1.6 env"
+           sudo chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "GOROOT=/opt/golang-1.16 go-1.16 env"
 
       - name: Make lib
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo linux32 chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.6 GO=go-1.6 make lib && ls libbase64-go* -lh"
+           sudo linux32 chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.16 GO=go-1.16 make lib && ls libbase64-go* -lh"
 
       - name: Make tar
         if: matrix.os.matrix == 'linux'
         run: |
-           sudo linux32 chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.6 GO=go-1.6 make tar"
+           sudo linux32 chroot ./ubuntu-${{matrix.os.release}}-${{matrix.os.arch}} /bin/bash -c "cd /build && GOROOT=/opt/golang-1.16 GO=go-1.16 make tar"
 
       - name: Prepare tar for upload
         if: matrix.os.matrix == 'linux'
