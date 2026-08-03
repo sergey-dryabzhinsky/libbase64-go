@@ -20,7 +20,8 @@ LIBEXT?=.so
 staticLIBEXT?=.a
 LIBNAME=libbase64-go
 ldLIBNAME=base64-go
-VERSION?=0.0.1
+VERSION?=0.0.2
+shortVERSION?=0
 goVERSION?=$(shell $(GO) version | cut -d' ' -f3)
 GOLDFLAGS?=-ldflags="-s -w" -ldflags "-X main.VERSION=$(VERSION)"
 #VERSION=$(shell grep 'const VERSION' $(LIBNAME).go | cut -d= -f2|tr -d '"')
@@ -34,7 +35,7 @@ MACHINE=amd64
 #$(info amd64)
 endif
 TARFLAGS?=-v
-XZ_CMP_LEVEL=9
+XZ_CMP_LEVEL?=9
 TARNAME?=$(LIBNAME)-$(goVERSION)_$(VERSION)_$(MACHINE).tar
 $(info Tar name will be: $(TARNAME))
 INSTALL_ROOT?=./tmp
@@ -71,55 +72,36 @@ $(ldLIBNAME).pc:
 	 $(ldLIBNAME).pc.in > $(ldLIBNAME).pc
 
 constants.h:
-	sed -e 's#VERSION#$(VERSION)#g' \
+	sed -e 's#_VERSION_#$(VERSION)#g' \
 	constants.h.in > constants.h
-
+  
 lib: $(LIBNAME)$(LIBEXT) $(LIBNAME)$(staticLIBEXT) $(ldLIBNAME).pc constants.h
 
 lib-link: lib
-	test ! -e $(LIBNAME)$(LIBEXT).$(VERSION) && mv $(LIBNAME)$(LIBEXT) $(LIBNAME)$(LIBEXT).$(VERSION)
-	test ! -e $(LIBNAME)$(LIBEXT) && ln -snf $(LIBNAME)$(LIBEXT).$(VERSION) $(LIBNAME)$(LIBEXT)
+	test ! -e $(LIBNAME)$(LIBEXT).$(VERSION) && mv $(LIBNAME)$(LIBEXT) $(LIBNAME)$(LIBEXT).$(VERSION) || true
+	test ! -e $(LIBNAME)$(LIBEXT) && \
+	ln -snf $(LIBNAME)$(LIBEXT).$(VERSION) $(LIBNAME)$(LIBEXT).$(shortVERSION) && \
+	ln -snf $(LIBNAME)$(LIBEXT).$(shortVERSION) $(LIBNAME)$(LIBEXT) || true
 	touch lib-link
-
-test-lib: lib-link
-	$(CC) $(CFLAGS) $(LDFLAGS) -o test-lib -I. -L. -l$(ldLIBNAME) test-lib.c
 
 test-lib_version: lib-link
 	$(CC) $(CFLAGS) $(LDFLAGS) -o test-lib_version -I. -L. -l$(ldLIBNAME) test-lib_version.c
 
-test-lib_error-init: lib-link
-	$(CC) $(CFLAGS) $(LDFLAGS) -o test-lib_error-init -I. -L. -l$(ldLIBNAME) test-lib_error-init.c
-
-test-lib-speed: lib-link
-	$(CC) $(CFLAGS) $(LDFLAGS) -o test-lib-speed -I. -L. -l$(ldLIBNAME) test-lib-speed.c
-
-test-lib-file: lib
-	$(CC) $(CFLAGS) $(LDFLAGS) -o test-lib-file -I. -L. -l$(ldLIBNAME) test-lib-file.c
-
-test-crypto-speed: lib
-	$(CC) $(CFLAGS) $(LDFLAGS) -o test-crypto-speed  -lcrypto test-crypto-speed.c
+test-lib_version-static: lib-link
+	$(CC) $(CFLAGS) $(LDFLAGS) -o test-lib_version-static -I. -L. test-lib_version.c -l:$(LIBNAME).a -ldl -lpthread
 
 tests: \
- test-lib \
  test-lib_version \
- test-lib_error-init \
- test-lib-speed \
- test-lib-file \
- test-crypto-speed
-	 export LD_LIBRARY_PATH=.
-	./test-lib_version
-	./test-lib_error-init
-	./test-lib
-	./test-lib-file
-	md5sum LICENSE
-	./test-lib-speed
-	./test-crypto-speed
+ test-lib_version-static
+	 export LD_LIBRARY_PATH=. && \
+	./test-lib_version && \
+	./test-lib_version-static
 
 clean:
 	rm -f $(LIBNAME)$(LIBEXT)* $(LIBNAME)$(staticLIBEXT) $(LIBNAME).h constants.h $(ldLIBNAME).pc lib-link
-	rm -f test-lib test-lib-speed test-crypto-speed test-lib-file \
+	rm -f test-lib \
 	 test-lib_version \
-	test-lib_error-init
+	 test-lib_version-static
 	rm -f go.mod
 	rm -rf tmp dist
 

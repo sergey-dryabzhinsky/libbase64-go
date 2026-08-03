@@ -24,8 +24,8 @@ func libbase64_go_nts__getLastErrorCode() C.int {
 	return result
 }
 
-//export libbase64_go_nts__getErrorDescription
-func libbase64_go_nts__getErrorDescription(errno C.int) *C.char {
+//export libbase64_go_ts__getErrorDescription
+func libbase64_go_ts__getErrorDescription(errno C.int) *C.char {
 	result := C.CString("No errors happened")
 	if (errno == ERRNO_NO_ERROR){
 		// pass
@@ -39,8 +39,8 @@ func libbase64_go_nts__getErrorDescription(errno C.int) *C.char {
 	return result
 }
 
-//export libbase64_go_nts__BASE64_encode_std
-func libbase64_go_nts__BASE64_encode_std(inputText *C.char) *C.char {
+//export libbase64_go_ts__BASE64_encode_std
+func libbase64_go_ts__BASE64_encode_std(inputText *C.char) *C.char {
 	goText := C.GoString(inputText)
 	encodedString := base64.StdEncoding.EncodeToString([]byte(goText))
 	return C.CString(encodedString)
@@ -59,15 +59,15 @@ func libbase64_go_nts__BASE64_decode_std(inputText *C.char) *C.char {
 	return C.CString(string(decodedBytes))
 }
 
-//export libbase64_go_nts__BASE64_encode_url
-func libbase64_go_nts__BASE64_encode_url(inputText *C.char) *C.char {
+//export libbase64_go_ts__BASE64_encode_url
+func libbase64_go_ts__BASE64_encode_url(inputText *C.char) *C.char {
 	goText := C.GoString(inputText)
 	encodedString := base64.URLEncoding.EncodeToString([]byte(goText))
 	return C.CString(encodedString)
 }
 
-//export libbase64_go_nts__BASE64_encode_raw
-func libbase64_go_nts__BASE64_encode_raw(inputText *C.char) *C.char {
+//export libbase64_go_ts__BASE64_encode_raw
+func libbase64_go_ts__BASE64_encode_raw(inputText *C.char) *C.char {
 	goText := C.GoString(inputText)
 	encodedString := base64.RawStdEncoding.EncodeToString([]byte(goText))
 	return C.CString(encodedString)
